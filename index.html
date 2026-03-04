@@ -12,7 +12,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
 
     <style>
-        .animate-section, .game-card, .project-card, .animate-header, .skill-box { opacity: 0; }
+        .animate-section, .game-card, .project-card, .animate-header, .skill-box {
+            opacity: 0; 
+        }
     </style>
 </head>
 <body>
@@ -20,7 +22,9 @@
         <div id="boot-text" class="typing-cursor"></div>
     </div>
 
-    <div id="progress-container"><div id="progress-bar"></div></div>
+    <div id="progress-container">
+        <div id="progress-bar"></div>
+    </div>
     <div id="hud-sector">// SECTOR_00: HEADER</div>
     <div class="grid-floor"></div>
 
@@ -255,12 +259,14 @@
             const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*";
             let iterations = 0;
             const maxIterations = 15;
+            
             const interval = setInterval(() => {
                 element.innerText = originalText.split('').map((char, index) => {
                     if (char === ' ') return ' ';
                     if (index < iterations / maxIterations * originalText.length) return originalText[index];
                     return chars[Math.floor(Math.random() * chars.length)];
                 }).join('');
+                
                 iterations++;
                 if (iterations >= maxIterations) {
                     clearInterval(interval);
@@ -271,6 +277,7 @@
 
         function startMainAnimations() {
             gsap.to(".animate-header", { opacity: 1, y: 0, duration: 1, stagger: 0.2, ease: "power3.out" });
+
             document.querySelectorAll('.animate-section').forEach(section => {
                 gsap.to(section, {
                     scrollTrigger: { 
@@ -286,9 +293,14 @@
                     opacity: 1, y: 0, duration: 0.8, ease: "power2.out"
                 });
             });
+
             document.querySelectorAll('.game-card, .project-card, .skill-box').forEach(el => {
-                gsap.to(el, { scrollTrigger: { trigger: el, start: "top 95%" }, opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)" });
+                gsap.to(el, {
+                    scrollTrigger: { trigger: el, start: "top 95%" },
+                    opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)"
+                });
             });
+
             triggerRandomGlitch();
             initParticles();
         }
@@ -327,6 +339,7 @@
         document.addEventListener('mousemove', (e) => {
             document.documentElement.style.setProperty('--cursor-x', e.clientX + 'px');
             document.documentElement.style.setProperty('--cursor-y', e.clientY + 'px');
+            
             const grid = document.querySelector('.grid-floor');
             if (grid) {
                 const x = (e.clientX / window.innerWidth - 0.5) * 15; 
@@ -430,6 +443,7 @@
                 const touchEndY = e.changedTouches[0].screenY;
                 const diffX = touchStartX - touchEndX;
                 const diffY = Math.abs(touchStartY - touchEndY);
+
                 if (diffY < 50) { 
                     if (diffX > 50) changeSlide(1);
                     if (diffX < -50) changeSlide(-1);
