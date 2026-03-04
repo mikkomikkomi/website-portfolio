@@ -203,8 +203,14 @@
             <div class="carousel-wrapper animate-modal-item">
                 <button class="nav-btn prev-btn" onclick="changeSlide(-1)">[ < ]</button>
                 
-                <div class="carousel-container">
-                    <img id="modalImg" src="" alt="" onclick="toggleZoom(event)" title="Click to zoom">
+                <div class="carousel-container" id="zoomContainer">
+                    <div class="zoom-controls" id="zoomUI">
+                        <button onclick="zoomImage(1.2)" title="Zoom In">[ + ]</button>
+                        <button onclick="zoomImage(0.8)" title="Zoom Out">[ - ]</button>
+                        <button onclick="resetZoom()" title="Reset">[ O ]</button>
+                    </div>
+                    
+                    <img id="modalImg" src="" alt="">
                     <iframe id="pdfViewer" src="" frameborder="0" style="display:none;"></iframe>
                 </div>
                 
@@ -250,14 +256,12 @@
             const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*";
             let iterations = 0;
             const maxIterations = 15;
-            
             const interval = setInterval(() => {
                 element.innerText = originalText.split('').map((char, index) => {
                     if (char === ' ') return ' ';
                     if (index < iterations / maxIterations * originalText.length) return originalText[index];
                     return chars[Math.floor(Math.random() * chars.length)];
                 }).join('');
-                
                 iterations++;
                 if (iterations >= maxIterations) {
                     clearInterval(interval);
@@ -268,7 +272,6 @@
 
         function startMainAnimations() {
             gsap.to(".animate-header", { opacity: 1, y: 0, duration: 1, stagger: 0.2, ease: "power3.out" });
-
             document.querySelectorAll('.animate-section').forEach(section => {
                 gsap.to(section, {
                     scrollTrigger: { 
@@ -284,14 +287,9 @@
                     opacity: 1, y: 0, duration: 0.8, ease: "power2.out"
                 });
             });
-
             document.querySelectorAll('.game-card, .project-card, .skill-box').forEach(el => {
-                gsap.to(el, {
-                    scrollTrigger: { trigger: el, start: "top 95%" },
-                    opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)"
-                });
+                gsap.to(el, { scrollTrigger: { trigger: el, start: "top 95%" }, opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)" });
             });
-
             triggerRandomGlitch();
             initParticles();
         }
@@ -330,7 +328,6 @@
         document.addEventListener('mousemove', (e) => {
             document.documentElement.style.setProperty('--cursor-x', e.clientX + 'px');
             document.documentElement.style.setProperty('--cursor-y', e.clientY + 'px');
-            
             const grid = document.querySelector('.grid-floor');
             if (grid) {
                 const x = (e.clientX / window.innerWidth - 0.5) * 15; 
@@ -350,35 +347,133 @@
             btn.addEventListener('mouseleave', () => { btn.style.transform = `translate(0px, 0px)`; });
         });
 
+        // ------------------------------------
+        // IMAGE MODAL & PAN/ZOOM SYSTEM
+        // ------------------------------------
         let currentImages = [];
         let currentIndex = 0;
+        
+        let imgScale = 1;
+        let imgPointX = 0;
+        let imgPointY = 0;
+        let isPanning = false;
+        let startX = 0, startY = 0;
+        
+        const zoomCont = document.getElementById("zoomContainer");
+        const imgEl = document.getElementById("modalImg");
+
+        function updateTransform() {
+            imgEl.style.transform = `translate(${imgPointX}px, ${imgPointY}px) scale(${imgScale})`;
+        }
+
+        function zoomImage(factor) {
+            imgScale *= factor;
+            if (imgScale < 1) { resetZoom(); return; } // Don't shrink smaller than container
+            updateTransform();
+        }
+
+        function resetZoom() {
+            imgScale = 1;
+            imgPointX = 0;
+            imgPointY = 0;
+            updateTransform();
+        }
+
+        // PC Mouse Wheel Zoom
+        zoomCont.addEventListener('wheel', (e) => {
+            if (imgEl.style.display !== "none") {
+                e.preventDefault();
+                (e.deltaY < 0) ? zoomImage(1.1) : zoomImage(0.9);
+            }
+        }, { passive: false });
+
+        // PC Mouse Drag Panning
+        zoomCont.addEventListener('mousedown', (e) => {
+            if(imgScale > 1 && imgEl.style.display !== "none") {
+                e.preventDefault();
+                isPanning = true;
+                startX = e.clientX - imgPointX;
+                startY = e.clientY - imgPointY;
+                zoomCont.style.cursor = "grabbing";
+            }
+        });
+
+        zoomCont.addEventListener('mousemove', (e) => {
+            if (!isPanning || imgScale === 1) return;
+            imgPointX = e.clientX - startX;
+            imgPointY = e.clientY - startY;
+            updateTransform();
+        });
+
+        zoomCont.addEventListener('mouseup', () => { isPanning = false; zoomCont.style.cursor = "grab"; });
+        zoomCont.addEventListener('mouseleave', () => { isPanning = false; zoomCont.style.cursor = "grab"; });
+
+        // Mobile Touch Drag Panning & Swiping
         let touchStartX = 0;
         let touchStartY = 0;
 
+        zoomCont.addEventListener('touchstart', (e) => {
+            if(imgScale > 1) {
+                isPanning = true;
+                startX = e.touches[0].clientX - imgPointX;
+                startY = e.touches[0].clientY - imgPointY;
+            } else {
+                touchStartX = e.touches[0].screenX; 
+                touchStartY = e.touches[0].screenY; 
+            }
+        });
+
+        zoomCont.addEventListener('touchmove', (e) => {
+            if (isPanning && imgScale > 1) {
+                e.preventDefault(); // Prevents screen from scrolling while panning
+                imgPointX = e.touches[0].clientX - startX;
+                imgPointY = e.touches[0].clientY - startY;
+                updateTransform();
+            }
+        }, { passive: false });
+
+        zoomCont.addEventListener('touchend', (e) => {
+            isPanning = false;
+            // If completely zoomed out, allow horizontal swipe to change slides
+            if (imgScale === 1) {
+                const touchEndX = e.changedTouches[0].screenX;
+                const touchEndY = e.changedTouches[0].screenY;
+                const diffX = touchStartX - touchEndX;
+                const diffY = Math.abs(touchStartY - touchEndY);
+
+                if (diffY < 50) { 
+                    if (diffX > 50) changeSlide(1);
+                    if (diffX < -50) changeSlide(-1);
+                }
+            }
+        });
+
+        // Modal Open/Close Logic
         function openModal(imgArray, title, desc) {
             currentImages = imgArray;
             currentIndex = 0;
+            resetZoom();
+            
             const modal = document.getElementById("projectModal");
-            const imgEl = document.getElementById("modalImg");
             const pdfEl = document.getElementById("pdfViewer");
             const navBtns = document.querySelectorAll(".nav-btn");
+            const zoomUI = document.getElementById("zoomUI");
 
             document.getElementById("modalTitle").innerText = title;
             document.getElementById("modalDesc").innerText = desc;
-            
-            // Reset zoom when opening a new gallery
-            imgEl.classList.remove("zoomed");
 
             if (currentImages[0].toLowerCase().endsWith('.pdf')) {
                 imgEl.style.display = "none";
                 pdfEl.style.display = "block";
                 pdfEl.src = currentImages[0];
+                zoomUI.style.display = "none"; // Hide zoom buttons for PDF
                 navBtns.forEach(btn => btn.style.visibility = "hidden");
                 document.getElementById("slideIndicator").style.visibility = "hidden";
             } else {
                 imgEl.style.display = "block";
                 pdfEl.style.display = "none";
                 pdfEl.src = "";
+                zoomUI.style.display = "flex"; // Show zoom buttons
                 navBtns.forEach(btn => btn.style.visibility = "visible");
                 document.getElementById("slideIndicator").style.visibility = "visible";
                 updateCarousel();
@@ -388,28 +483,18 @@
             gsap.fromTo(modal, { opacity: 0 }, { opacity: 1, duration: 0.4 });
             gsap.fromTo(".modal-content", { scale: 0.85, filter: "blur(10px)" }, { scale: 1, filter: "blur(0px)", duration: 0.5, ease: "back.out(1.5)" });
             gsap.to(".animate-modal-item", { opacity: 1, y: 0, duration: 0.4, stagger: 0.1, delay: 0.2 });
-
-            document.querySelector(".modal").scrollTop = 0;
         }
 
         function updateCarousel() {
-            const imgEl = document.getElementById("modalImg");
-            const indicator = document.getElementById("slideIndicator");
-            const prevBtn = document.querySelector(".prev-btn");
-            const nextBtn = document.querySelector(".next-btn");
-
             imgEl.src = currentImages[currentIndex];
-            indicator.innerText = `// DATA_NODE: ${currentIndex + 1}/${currentImages.length}`;
-            
+            document.getElementById("slideIndicator").innerText = `// DATA_NODE: ${currentIndex + 1}/${currentImages.length}`;
             const showNav = currentImages.length > 1;
-            prevBtn.style.visibility = showNav ? "visible" : "hidden";
-            nextBtn.style.visibility = showNav ? "visible" : "hidden";
+            document.querySelector(".prev-btn").style.visibility = showNav ? "visible" : "hidden";
+            document.querySelector(".next-btn").style.visibility = showNav ? "visible" : "hidden";
         }
 
         function changeSlide(direction) {
-            const imgEl = document.getElementById("modalImg");
-            imgEl.classList.remove("zoomed"); // Reset zoom on slide change
-
+            resetZoom(); // Always reset zoom when changing picture
             gsap.to(imgEl, { opacity: 0, x: direction * -20, duration: 0.2, onComplete: () => {
                 currentIndex = (currentIndex + direction + currentImages.length) % currentImages.length;
                 updateCarousel();
@@ -417,15 +502,9 @@
             }});
         }
 
-        function toggleZoom(e) {
-            const img = document.getElementById("modalImg");
-            img.classList.toggle("zoomed");
-        }
-
         function closeModal() { 
             const modal = document.getElementById("projectModal");
-            document.getElementById("modalImg").classList.remove("zoomed"); // Reset zoom on close
-
+            resetZoom();
             gsap.to(modal, { opacity: 0, duration: 0.3, onComplete: () => {
                 modal.style.display = "none";
                 document.getElementById("pdfViewer").src = ""; 
@@ -438,29 +517,6 @@
                 if (e.key === "ArrowRight") changeSlide(1);
                 if (e.key === "ArrowLeft") changeSlide(-1);
                 if (e.key === "Escape") closeModal();
-            }
-        });
-
-        // Fixed Mobile Touch Logic 
-        const carouselWrapper = document.querySelector('.carousel-wrapper');
-        carouselWrapper.addEventListener('touchstart', (e) => { 
-            touchStartX = e.changedTouches[0].screenX; 
-            touchStartY = e.changedTouches[0].screenY; 
-        });
-        carouselWrapper.addEventListener('touchend', (e) => {
-            // Prevent swiping slides if the user is zoomed in
-            if(document.getElementById("modalImg").classList.contains("zoomed")) return;
-
-            const touchEndX = e.changedTouches[0].screenX;
-            const touchEndY = e.changedTouches[0].screenY;
-            
-            const diffX = touchStartX - touchEndX;
-            const diffY = Math.abs(touchStartY - touchEndY);
-
-            // Ensure the user swiped horizontally, not scrolling vertically
-            if (diffY < 50) { 
-                if (diffX > 50) changeSlide(1);
-                if (diffX < -50) changeSlide(-1);
             }
         });
 
