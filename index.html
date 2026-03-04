@@ -22,9 +22,8 @@
         <div id="boot-text" class="typing-cursor"></div>
     </div>
 
-    <div id="progress-container">
-        <div id="progress-bar"></div>
-    </div>
+    <div id="cursor-ring"></div>
+    <div id="progress-container"><div id="progress-bar"></div></div>
     <div id="hud-sector">// SECTOR_00: HEADER</div>
     <div class="grid-floor"></div>
 
@@ -40,13 +39,13 @@
         </div>
         <div class="header-main animate-header">
             <h1 class="glitch-text glitch-target decrypt-target" data-text="Mikko Nazareno">Mikko Nazareno</h1>
-            <a href="resume.pdf" download class="resume-btn">/ DOWNLOAD_RESUME</a>
+            <a href="resume.pdf" download class="resume-btn target-snap">/ DOWNLOAD_RESUME</a>
         </div>
         <p class="status-text animate-header">// STATUS: COMPUTER SCIENCE STUDENT & ASPIRING GAME DEV</p>
-        <a href="#about" class="scroll-prompt animate-header">[ CLICK_TO_INITIALIZE ]</a>
+        <a href="#about" class="scroll-prompt animate-header target-snap">[ CLICK_TO_INITIALIZE ]</a>
     </header>
     
-    <main>
+    <main id="main-content">
         <section id="about" class="animate-section hud-bracket" data-sector="SECTOR_01: ABOUT">
             <h2 class="section-header glitch-target decrypt-target" data-text="About Me">About Me</h2>
             <p>Computer Science student who is passionate about video games. I focus on game development and UI/UX design. I love collaborating with teams to build high-quality digital experiences while hitting every milestone.</p>
@@ -89,25 +88,25 @@
             <h2 class="section-header glitch-target decrypt-target" data-text="My Top 5 Games O.A.T">My Top 5 Games O.A.T</h2>
             <p class="section-subtext">// Inspiration for game development, and must plays!</p>
             <div class="game-grid">
-                <div class="game-card float-animation" data-tilt data-tilt-scale="1.05" data-tilt-glare data-tilt-max-glare="0.3" style="background-image: url('sekiro.jpg');">
+                <div class="game-card float-animation target-snap" data-tilt data-tilt-scale="1.05" data-tilt-glare data-tilt-max-glare="0.3" style="background-image: url('sekiro.jpg');">
                     <div class="game-info">
                         <h3>1. Sekiro</h3>
                         <span class="game-tag">// COMBAT & BOSSES</span>
                     </div>
                 </div>
-                <div class="game-card float-animation" data-tilt data-tilt-scale="1.05" data-tilt-glare data-tilt-max-glare="0.3" style="background-image: url('got.jpg');">
+                <div class="game-card float-animation target-snap" data-tilt data-tilt-scale="1.05" data-tilt-glare data-tilt-max-glare="0.3" style="background-image: url('got.jpg');">
                     <div class="game-info">
                         <h3>2. Ghost of Tsushima</h3>
                         <span class="game-tag">// STORY & VISUALS</span>
                     </div>
                 </div>
-                <div class="game-card float-animation" data-tilt data-tilt-scale="1.05" data-tilt-glare data-tilt-max-glare="0.3" style="background-image: url('exp33.jpg');">
+                <div class="game-card float-animation target-snap" data-tilt data-tilt-scale="1.05" data-tilt-glare data-tilt-max-glare="0.3" style="background-image: url('exp33.jpg');">
                     <div class="game-info">
                         <h3>3. Expedition 33</h3>
                         <span class="game-tag">// ART & GAME DIRECTION</span>
                     </div>
                 </div>
-                <div class="game-card split-card float-animation" data-tilt data-tilt-scale="1.05" data-tilt-glare data-tilt-max-glare="0.3">
+                <div class="game-card split-card float-animation target-snap" data-tilt data-tilt-scale="1.05" data-tilt-glare data-tilt-max-glare="0.3">
                     <div class="split-left" style="background-image: url('hk.jpg');"></div>
                     <div class="split-right" style="background-image: url('silksong.jpg');"></div>
                     <div class="game-info">
@@ -115,7 +114,7 @@
                         <span class="game-tag">// ART & BOSSES</span>
                     </div>
                 </div>
-                <div class="game-card float-animation" data-tilt data-tilt-scale="1.05" data-tilt-glare data-tilt-max-glare="0.3" style="background-image: url('eldenring.jpg');">
+                <div class="game-card float-animation target-snap" data-tilt data-tilt-scale="1.05" data-tilt-glare data-tilt-max-glare="0.3" style="background-image: url('eldenring.jpg');">
                     <div class="game-info">
                         <h3>5. Elden Ring</h3>
                         <span class="game-tag">// MUSIC & DIRECTION</span>
@@ -126,57 +125,65 @@
 
         <section id="projects" class="animate-section hud-bracket" data-sector="SECTOR_04: WORK">
             <h2 class="section-header glitch-target decrypt-target" data-text="My Work">My Work</h2>
+            
+            <div class="project-filters">
+                <button class="filter-btn active target-snap" data-filter="all">[ ALL ]</button>
+                <button class="filter-btn target-snap" data-filter="ui">[ UI/UX ]</button>
+                <button class="filter-btn target-snap" data-filter="art">[ 2D ART ]</button>
+                <button class="filter-btn target-snap" data-filter="docs">[ DOCS ]</button>
+            </div>
+
             <div class="project-grid">
-                <div class="project-card float-animation" data-tilt data-tilt-scale="1.05" data-tilt-glare data-tilt-max-glare="0.2" style="background-image: url('welcome-page-1.jpg');" onclick="openModal(['welcome-page-1.jpg', 'signup-page-2.jpg', 'login-page-3.jpg', 'home-page-4.jpg', 'challenges-5.jpg', 'bmi-calculator-6.jpg', 'workout-7.jpg', 'more-options-8.jpg', 'profile-9.jpg', 'shop-10.jpg'], 'Mobile Health App Design', 'High-fidelity prototype.')">
+                <div class="project-card float-animation target-snap" data-category="ui" data-tilt data-tilt-scale="1.05" data-tilt-glare data-tilt-max-glare="0.2" style="background-image: url('welcome-page-1.jpg');" onclick="openModal(['welcome-page-1.jpg', 'signup-page-2.jpg', 'login-page-3.jpg', 'home-page-4.jpg', 'challenges-5.jpg', 'bmi-calculator-6.jpg', 'workout-7.jpg', 'more-options-8.jpg', 'profile-9.jpg', 'shop-10.jpg'], 'Mobile Health App Design', 'High-fidelity prototype.')">
                     <div class="project-content">
                         <h3>Mobile Health App Design</h3>
                         <p>View Gallery</p>
                     </div>
                 </div>
                 
-                <div class="project-card float-animation" data-tilt data-tilt-scale="1.05" data-tilt-glare data-tilt-max-glare="0.2" style="background-image: url('home-design.png');" onclick="openModal(['home-design.png', 'home-battle-1.png', 'home-battle-2.png', 'home-battle-3.png', 'battle-vs-ai.png', 'battle-quick-play.png', 'battle-ranked.png', 'collection-design.png', 'collection-deck.png', 'profile-design.png', 'shop-design.png'], 'Mobile Game UI/UX', 'UI concepts for Torogi Hero\'s Dogma.')">
+                <div class="project-card float-animation target-snap" data-category="ui" data-tilt data-tilt-scale="1.05" data-tilt-glare data-tilt-max-glare="0.2" style="background-image: url('home-design.png');" onclick="openModal(['home-design.png', 'home-battle-1.png', 'home-battle-2.png', 'home-battle-3.png', 'battle-vs-ai.png', 'battle-quick-play.png', 'battle-ranked.png', 'collection-design.png', 'collection-deck.png', 'profile-design.png', 'shop-design.png'], 'Mobile Game UI/UX', 'UI concepts for Torogi Hero\'s Dogma.')">
                     <div class="project-content">
                         <h3>Mobile Game UI/UX</h3>
                         <p>View Gallery</p>
                     </div>
                 </div>
                 
-                <div class="project-card float-animation" data-tilt data-tilt-scale="1.05" data-tilt-glare data-tilt-max-glare="0.2" style="background-image: url('studio-sagud-main.png');" onclick="openModal(['studio-sagud-main.png', 'animations-page.png', 'engagements-page.png', 'games-page.png', 'media-features-page.png', 'photos-gallery-page-1.png'], 'Company Website Design', 'Full-page website layout concepts.')">
+                <div class="project-card float-animation target-snap" data-category="ui" data-tilt data-tilt-scale="1.05" data-tilt-glare data-tilt-max-glare="0.2" style="background-image: url('studio-sagud-main.png');" onclick="openModal(['studio-sagud-main.png', 'animations-page.png', 'engagements-page.png', 'games-page.png', 'media-features-page.png', 'photos-gallery-page-1.png'], 'Company Website Design', 'Full-page website layout concepts.')">
                     <div class="project-content">
                         <h3>Company Website Design</h3>
                         <p>View Gallery</p>
                     </div>
                 </div>
                 
-                <div class="project-card float-animation" data-tilt data-tilt-scale="1.05" data-tilt-glare data-tilt-max-glare="0.2" style="background-image: url('frieren.jpg');" onclick="openModal(['frieren.jpg', '2b-nier.jpg', 'bocchi.jpg', 'fern-frieren.jpg', 'fire-keeper-ds3.jpg', 'frieren-2.jpg', 'frieren-doodles.jpg', 'himeno-csm.jpg', 'kaoruko-waguri.jpg', 'makima-csm.jpg', 'pb.jpg', 'reze-csm.jpg'], 'Traditional Sketches', 'Hand-drawn character studies.')">
+                <div class="project-card float-animation target-snap" data-category="art" data-tilt data-tilt-scale="1.05" data-tilt-glare data-tilt-max-glare="0.2" style="background-image: url('frieren.jpg');" onclick="openModal(['frieren.jpg', '2b-nier.jpg', 'bocchi.jpg', 'fern-frieren.jpg', 'fire-keeper-ds3.jpg', 'frieren-2.jpg', 'frieren-doodles.jpg', 'himeno-csm.jpg', 'kaoruko-waguri.jpg', 'makima-csm.jpg', 'pb.jpg', 'reze-csm.jpg'], 'Traditional Sketches', 'Hand-drawn character studies.')">
                     <div class="project-content">
                         <h3>Traditional Sketches</h3>
                         <p>View Gallery</p>
                     </div>
                 </div>
                 
-                <div class="project-card float-animation" data-tilt data-tilt-scale="1.05" data-tilt-glare data-tilt-max-glare="0.2" style="background-image: url('brochure-outer.png');" onclick="openModal(['calling-card-front.png', 'calling-card-back.png', 'brochure-inner.png', 'brochure-outer.png'], 'Org Brochure and Calling Card', 'Print layout design.')">
+                <div class="project-card float-animation target-snap" data-category="docs" data-tilt data-tilt-scale="1.05" data-tilt-glare data-tilt-max-glare="0.2" style="background-image: url('brochure-outer.png');" onclick="openModal(['calling-card-front.png', 'calling-card-back.png', 'brochure-inner.png', 'brochure-outer.png'], 'Org Brochure and Calling Card', 'Print layout design.')">
                     <div class="project-content">
                         <h3>Org Brochure and Calling Card</h3>
                         <p>View Gallery</p>
                     </div>
                 </div>
                 
-                <div class="project-card float-animation" data-tilt data-tilt-scale="1.05" data-tilt-glare data-tilt-max-glare="0.2" style="background-image: url('org-site-1.jpg');">
+                <div class="project-card float-animation target-snap" data-category="ui" data-tilt data-tilt-scale="1.05" data-tilt-glare data-tilt-max-glare="0.2" style="background-image: url('org-site-1.jpg');">
                     <div class="project-content">
                         <h3>Organization Website</h3>
                         <a href="https://www.figma.com/design/w8nk3r3z6j5de7ved8m7VO/Espineda_Nazareno---Lab-Act-4--Organization-Website?node-id=0-1" target="_blank" class="figma-btn magnetic-btn">View in Figma</a>
                     </div>
                 </div>
                 
-                <div class="project-card float-animation" data-tilt data-tilt-scale="1.05" data-tilt-glare data-tilt-max-glare="0.2" onclick="openModal(['pitch-bible.pdf'], 'A Tail of Two Hearts', 'Official brand book and pitch deck.')">
+                <div class="project-card float-animation target-snap" data-category="docs" data-tilt data-tilt-scale="1.05" data-tilt-glare data-tilt-max-glare="0.2" onclick="openModal(['pitch-bible.pdf'], 'A Tail of Two Hearts', 'Official brand book and pitch deck.')">
                     <div class="project-content">
                         <h3>A Tail of Two Hearts</h3>
                         <p>View PDF Document</p>
                     </div>
                 </div>
                 
-                <div class="project-card float-animation" data-tilt data-tilt-scale="1.05" data-tilt-glare data-tilt-max-glare="0.2" style="background-image: url('da-logo.png');" onclick="openModal(['athens.png', 'beach.png', 'centaur.png', 'crete.png', 'cyclops.png', 'da-logo.png', 'daedalus.png', 'eagle-falcon.png', 'greek-soldier.png', 'icarus.png', 'king-minos.png', 'minotaur.png', 'plateau.png', 'sea.png', 'water-hydra.png'], '2D Pixel Art Assets', 'In-game environment and character assets.')">
+                <div class="project-card float-animation target-snap" data-category="art" data-tilt data-tilt-scale="1.05" data-tilt-glare data-tilt-max-glare="0.2" style="background-image: url('da-logo.png');" onclick="openModal(['athens.png', 'beach.png', 'centaur.png', 'crete.png', 'cyclops.png', 'da-logo.png', 'daedalus.png', 'eagle-falcon.png', 'greek-soldier.png', 'icarus.png', 'king-minos.png', 'minotaur.png', 'plateau.png', 'sea.png', 'water-hydra.png'], '2D Pixel Art Assets', 'In-game environment and character assets.')">
                     <div class="project-content">
                         <h3>2D Pixel Art Assets</h3>
                         <p>View Gallery</p>
@@ -188,36 +195,36 @@
         <section id="contact" class="animate-section hud-bracket" data-sector="SECTOR_05: CONTACT">
             <h2 class="section-header glitch-target decrypt-target" data-text="Establish Connection">Establish Connection</h2>
             <div class="contact-links">
-                <a href="mailto:mikko.nazareno0325@gmail.com" class="contact-btn magnetic-btn">// EMAIL</a>
-                <a href="https://github.com/mikkomikkomi" target="_blank" class="contact-btn magnetic-btn">// GITHUB</a>
-                <a href="https://www.linkedin.com/in/mikko-nazareno-552573347/" target="_blank" class="contact-btn magnetic-btn">// LINKEDIN</a>
-                <a href="https://www.facebook.com/mikkomikkomii" target="_blank" class="contact-btn magnetic-btn">// FACEBOOK</a>
-                <a href="https://www.instagram.com/mikkomikkomi/" target="_blank" class="contact-btn magnetic-btn">// INSTAGRAM</a>
-                <a href="https://m.me/mikkomikkomii" target="_blank" class="contact-btn magnetic-btn">// MESSENGER</a>
+                <a href="mailto:mikko.nazareno0325@gmail.com" class="contact-btn magnetic-btn target-snap">// EMAIL</a>
+                <a href="https://github.com/mikkomikkomi" target="_blank" class="contact-btn magnetic-btn target-snap">// GITHUB</a>
+                <a href="https://www.linkedin.com/in/mikko-nazareno-552573347/" target="_blank" class="contact-btn magnetic-btn target-snap">// LINKEDIN</a>
+                <a href="https://www.facebook.com/mikkomikkomii" target="_blank" class="contact-btn magnetic-btn target-snap">// FACEBOOK</a>
+                <a href="https://www.instagram.com/mikkomikkomi/" target="_blank" class="contact-btn magnetic-btn target-snap">// INSTAGRAM</a>
+                <a href="https://m.me/mikkomikkomii" target="_blank" class="contact-btn magnetic-btn target-snap">// MESSENGER</a>
             </div>
         </section>
     </main>
 
-    <button id="back-to-top" title="Back to Top">[ ^_TOP ]</button>
+    <button id="back-to-top" class="target-snap" title="Back to Top">[ ^_TOP ]</button>
 
     <div id="projectModal" class="modal">
-        <span class="close" onclick="closeModal()">&times;</span>
+        <span class="close target-snap" onclick="closeModal()">&times;</span>
         <div class="modal-content hud-bracket">
             <div class="carousel-wrapper animate-modal-item">
-                <button class="nav-btn prev-btn" onclick="changeSlide(-1)">[ < ]</button>
+                <button class="nav-btn prev-btn target-snap" onclick="changeSlide(-1)">[ < ]</button>
                 
                 <div class="carousel-container" id="zoomContainer">
                     <div class="zoom-controls" id="zoomUI">
-                        <button onclick="zoomImage(1.2)" title="Zoom In">[ + ]</button>
-                        <button onclick="zoomImage(0.8)" title="Zoom Out">[ - ]</button>
-                        <button onclick="resetZoom()" title="Reset">[ O ]</button>
+                        <button class="target-snap" onclick="zoomImage(1.2)" title="Zoom In">[ + ]</button>
+                        <button class="target-snap" onclick="zoomImage(0.8)" title="Zoom Out">[ - ]</button>
+                        <button class="target-snap" onclick="resetZoom()" title="Reset">[ O ]</button>
                     </div>
                     
                     <img id="modalImg" src="" alt="">
                     <iframe id="pdfViewer" src="" frameborder="0" style="display:none;"></iframe>
                 </div>
                 
-                <button class="nav-btn next-btn" onclick="changeSlide(1)">[ > ]</button>
+                <button class="nav-btn next-btn target-snap" onclick="changeSlide(1)">[ > ]</button>
             </div>
             <div id="modalText">
                 <h3 id="modalTitle" class="animate-modal-item"></h3>
@@ -313,11 +320,20 @@
             }});
         }
 
+        // --- NEW: Scroll Velocity Warp ---
+        let lastScrollTop = window.scrollY;
         window.addEventListener('scroll', () => {
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             const scrolled = (winScroll / height) * 100;
             document.getElementById("progress-bar").style.width = scrolled + "%";
+
+            // Velocity Tracking
+            let velocity = winScroll - lastScrollTop;
+            lastScrollTop = winScroll;
+            let skewAmount = Math.min(Math.max(velocity * 0.03, -3), 3); // Limits the stretch
+            gsap.to("#main-content", { skewY: skewAmount, duration: 0.5, ease: "power2.out" });
+            gsap.to("#main-content", { skewY: 0, duration: 0.5, ease: "power2.out", delay: 0.1 });
         });
 
         setInterval(() => {
@@ -336,16 +352,87 @@
             }, 300);
         }
 
+        // --- NEW: Custom Cursor Snap ---
+        const cursorRing = document.getElementById('cursor-ring');
+        let isCursorSnapping = false;
+
         document.addEventListener('mousemove', (e) => {
             document.documentElement.style.setProperty('--cursor-x', e.clientX + 'px');
             document.documentElement.style.setProperty('--cursor-y', e.clientY + 'px');
             
+            if (!isCursorSnapping) {
+                gsap.to(cursorRing, { x: e.clientX, y: e.clientY, duration: 0.1, ease: "power2.out" });
+            }
+
             const grid = document.querySelector('.grid-floor');
             if (grid) {
                 const x = (e.clientX / window.innerWidth - 0.5) * 15; 
                 const y = (e.clientY / window.innerHeight - 0.5) * 15;
                 grid.style.transform = `perspective(600px) rotateX(${75 - y}deg) rotateY(${x}deg)`;
             }
+        });
+
+        // Makes the ring snap to buttons and cards
+        document.querySelectorAll('.target-snap').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                isCursorSnapping = true;
+                const rect = el.getBoundingClientRect();
+                gsap.to(cursorRing, { 
+                    x: rect.left + rect.width / 2, 
+                    y: rect.top + rect.height / 2, 
+                    width: rect.width + 10, 
+                    height: rect.height + 10, 
+                    borderRadius: "8px", 
+                    borderColor: "rgba(255,255,255,0.8)",
+                    duration: 0.3 
+                });
+            });
+            el.addEventListener('mouseleave', () => {
+                isCursorSnapping = false;
+                gsap.to(cursorRing, { 
+                    width: 30, height: 30, borderRadius: "50%", 
+                    borderColor: "rgba(255,255,255,0.3)", duration: 0.3 
+                });
+            });
+        });
+
+        // --- NEW: Decrypt on Hover ---
+        document.querySelectorAll('.decrypt-target').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                if (!el.classList.contains('is-decrypting')) {
+                    el.classList.add('is-decrypting');
+                    decryptText(el);
+                    setTimeout(() => el.classList.remove('is-decrypting'), 650);
+                }
+            });
+        });
+
+        // --- NEW: Click Shockwave Ripple ---
+        window.addEventListener('click', (e) => {
+            const ripple = document.createElement('div');
+            ripple.classList.add('click-ripple');
+            ripple.style.left = e.clientX + 'px';
+            ripple.style.top = e.clientY + 'px';
+            document.body.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+        });
+
+        // --- NEW: Category Filters ---
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const filter = btn.getAttribute('data-filter');
+                document.querySelectorAll('.project-card').forEach(card => {
+                    if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                        gsap.to(card, { opacity: 1, scale: 1, filter: "grayscale(100%) blur(0px)", duration: 0.4, pointerEvents: "auto" });
+                    } else {
+                        // Fades them out without breaking the grid
+                        gsap.to(card, { opacity: 0.15, scale: 0.95, filter: "grayscale(100%) blur(2px)", duration: 0.4, pointerEvents: "none" });
+                    }
+                });
+            });
         });
 
         const magneticBtns = document.querySelectorAll('.magnetic-btn');
@@ -528,6 +615,8 @@
             else btt.style.opacity = '0';
         });
         btt.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        // --- Clicking the empty background closes the modal ---
         window.onclick = (e) => { if (e.target.className == "modal") closeModal(); }
 
         function triggerRandomGlitch() {
