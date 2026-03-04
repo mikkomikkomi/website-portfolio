@@ -200,10 +200,14 @@
     <div id="projectModal" class="modal">
         <span class="close" onclick="closeModal()">&times;</span>
         <div class="modal-content hud-bracket">
-            <div class="carousel-container animate-modal-item">
+            <div class="carousel-wrapper animate-modal-item">
                 <button class="nav-btn prev-btn" onclick="changeSlide(-1)">[ < ]</button>
-                <img id="modalImg" src="" alt="">
-                <iframe id="pdfViewer" src="" frameborder="0" style="display:none; width:100%; height:75vh;"></iframe>
+                
+                <div class="carousel-container">
+                    <img id="modalImg" src="" alt="" onclick="toggleZoom(event)" title="Click to zoom">
+                    <iframe id="pdfViewer" src="" frameborder="0" style="display:none;"></iframe>
+                </div>
+                
                 <button class="nav-btn next-btn" onclick="changeSlide(1)">[ > ]</button>
             </div>
             <div id="modalText">
@@ -361,6 +365,9 @@
 
             document.getElementById("modalTitle").innerText = title;
             document.getElementById("modalDesc").innerText = desc;
+            
+            // Reset zoom when opening a new gallery
+            imgEl.classList.remove("zoomed");
 
             if (currentImages[0].toLowerCase().endsWith('.pdf')) {
                 imgEl.style.display = "none";
@@ -400,15 +407,25 @@
         }
 
         function changeSlide(direction) {
-            gsap.to("#modalImg", { opacity: 0, x: direction * -20, duration: 0.2, onComplete: () => {
+            const imgEl = document.getElementById("modalImg");
+            imgEl.classList.remove("zoomed"); // Reset zoom on slide change
+
+            gsap.to(imgEl, { opacity: 0, x: direction * -20, duration: 0.2, onComplete: () => {
                 currentIndex = (currentIndex + direction + currentImages.length) % currentImages.length;
                 updateCarousel();
-                gsap.fromTo("#modalImg", { x: direction * 20, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3 });
+                gsap.fromTo(imgEl, { x: direction * 20, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3 });
             }});
+        }
+
+        function toggleZoom(e) {
+            const img = document.getElementById("modalImg");
+            img.classList.toggle("zoomed");
         }
 
         function closeModal() { 
             const modal = document.getElementById("projectModal");
+            document.getElementById("modalImg").classList.remove("zoomed"); // Reset zoom on close
+
             gsap.to(modal, { opacity: 0, duration: 0.3, onComplete: () => {
                 modal.style.display = "none";
                 document.getElementById("pdfViewer").src = ""; 
@@ -424,19 +441,23 @@
             }
         });
 
-        // Fixed Mobile Touch Logic
-        const modalContent = document.querySelector('.modal-content');
-        modalContent.addEventListener('touchstart', (e) => { 
+        // Fixed Mobile Touch Logic 
+        const carouselWrapper = document.querySelector('.carousel-wrapper');
+        carouselWrapper.addEventListener('touchstart', (e) => { 
             touchStartX = e.changedTouches[0].screenX; 
             touchStartY = e.changedTouches[0].screenY; 
         });
-        modalContent.addEventListener('touchend', (e) => {
+        carouselWrapper.addEventListener('touchend', (e) => {
+            // Prevent swiping slides if the user is zoomed in
+            if(document.getElementById("modalImg").classList.contains("zoomed")) return;
+
             const touchEndX = e.changedTouches[0].screenX;
             const touchEndY = e.changedTouches[0].screenY;
             
             const diffX = touchStartX - touchEndX;
             const diffY = Math.abs(touchStartY - touchEndY);
 
+            // Ensure the user swiped horizontally, not scrolling vertically
             if (diffY < 50) { 
                 if (diffX > 50) changeSlide(1);
                 if (diffX < -50) changeSlide(-1);
