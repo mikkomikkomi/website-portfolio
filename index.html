@@ -12,9 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
 
     <style>
-        .animate-section, .game-card, .project-card, .animate-header, .skill-box {
-            opacity: 0; 
-        }
+        .animate-section, .game-card, .project-card, .animate-header, .skill-box { opacity: 0; }
     </style>
 </head>
 <body>
@@ -85,6 +83,7 @@
 
         <section id="top-games" class="animate-section hud-bracket" data-sector="SECTOR_03: TOP_GAMES">
             <h2 class="section-header glitch-target decrypt-target" data-text="My Top 5 Games O.A.T">My Top 5 Games O.A.T</h2>
+            <p class="section-subtext">// Inspiration for game development, and must plays!</p>
             <div class="game-grid">
                 <div class="game-card float-animation" data-tilt data-tilt-scale="1.05" data-tilt-glare data-tilt-max-glare="0.3" style="background-image: url('sekiro.jpg');">
                     <div class="game-info">
@@ -347,15 +346,11 @@
             btn.addEventListener('mouseleave', () => { btn.style.transform = `translate(0px, 0px)`; });
         });
 
-        // ------------------------------------
-        // IMAGE MODAL & PAN/ZOOM SYSTEM
-        // ------------------------------------
+        // Zoom and Pan Logic
         let currentImages = [];
         let currentIndex = 0;
-        
         let imgScale = 1;
-        let imgPointX = 0;
-        let imgPointY = 0;
+        let imgPointX = 0, imgPointY = 0;
         let isPanning = false;
         let startX = 0, startY = 0;
         
@@ -368,7 +363,7 @@
 
         function zoomImage(factor) {
             imgScale *= factor;
-            if (imgScale < 1) { resetZoom(); return; } // Don't shrink smaller than container
+            if (imgScale < 1) { resetZoom(); return; }
             updateTransform();
         }
 
@@ -379,7 +374,6 @@
             updateTransform();
         }
 
-        // PC Mouse Wheel Zoom
         zoomCont.addEventListener('wheel', (e) => {
             if (imgEl.style.display !== "none") {
                 e.preventDefault();
@@ -387,7 +381,6 @@
             }
         }, { passive: false });
 
-        // PC Mouse Drag Panning
         zoomCont.addEventListener('mousedown', (e) => {
             if(imgScale > 1 && imgEl.style.display !== "none") {
                 e.preventDefault();
@@ -408,9 +401,7 @@
         zoomCont.addEventListener('mouseup', () => { isPanning = false; zoomCont.style.cursor = "grab"; });
         zoomCont.addEventListener('mouseleave', () => { isPanning = false; zoomCont.style.cursor = "grab"; });
 
-        // Mobile Touch Drag Panning & Swiping
-        let touchStartX = 0;
-        let touchStartY = 0;
+        let touchStartX = 0, touchStartY = 0;
 
         zoomCont.addEventListener('touchstart', (e) => {
             if(imgScale > 1) {
@@ -425,7 +416,7 @@
 
         zoomCont.addEventListener('touchmove', (e) => {
             if (isPanning && imgScale > 1) {
-                e.preventDefault(); // Prevents screen from scrolling while panning
+                e.preventDefault();
                 imgPointX = e.touches[0].clientX - startX;
                 imgPointY = e.touches[0].clientY - startY;
                 updateTransform();
@@ -434,13 +425,11 @@
 
         zoomCont.addEventListener('touchend', (e) => {
             isPanning = false;
-            // If completely zoomed out, allow horizontal swipe to change slides
             if (imgScale === 1) {
                 const touchEndX = e.changedTouches[0].screenX;
                 const touchEndY = e.changedTouches[0].screenY;
                 const diffX = touchStartX - touchEndX;
                 const diffY = Math.abs(touchStartY - touchEndY);
-
                 if (diffY < 50) { 
                     if (diffX > 50) changeSlide(1);
                     if (diffX < -50) changeSlide(-1);
@@ -448,12 +437,10 @@
             }
         });
 
-        // Modal Open/Close Logic
         function openModal(imgArray, title, desc) {
             currentImages = imgArray;
             currentIndex = 0;
             resetZoom();
-            
             const modal = document.getElementById("projectModal");
             const pdfEl = document.getElementById("pdfViewer");
             const navBtns = document.querySelectorAll(".nav-btn");
@@ -466,14 +453,14 @@
                 imgEl.style.display = "none";
                 pdfEl.style.display = "block";
                 pdfEl.src = currentImages[0];
-                zoomUI.style.display = "none"; // Hide zoom buttons for PDF
+                zoomUI.style.display = "none";
                 navBtns.forEach(btn => btn.style.visibility = "hidden");
                 document.getElementById("slideIndicator").style.visibility = "hidden";
             } else {
                 imgEl.style.display = "block";
                 pdfEl.style.display = "none";
                 pdfEl.src = "";
-                zoomUI.style.display = "flex"; // Show zoom buttons
+                zoomUI.style.display = "flex";
                 navBtns.forEach(btn => btn.style.visibility = "visible");
                 document.getElementById("slideIndicator").style.visibility = "visible";
                 updateCarousel();
@@ -483,6 +470,7 @@
             gsap.fromTo(modal, { opacity: 0 }, { opacity: 1, duration: 0.4 });
             gsap.fromTo(".modal-content", { scale: 0.85, filter: "blur(10px)" }, { scale: 1, filter: "blur(0px)", duration: 0.5, ease: "back.out(1.5)" });
             gsap.to(".animate-modal-item", { opacity: 1, y: 0, duration: 0.4, stagger: 0.1, delay: 0.2 });
+            document.querySelector(".modal").scrollTop = 0;
         }
 
         function updateCarousel() {
@@ -494,7 +482,7 @@
         }
 
         function changeSlide(direction) {
-            resetZoom(); // Always reset zoom when changing picture
+            resetZoom();
             gsap.to(imgEl, { opacity: 0, x: direction * -20, duration: 0.2, onComplete: () => {
                 currentIndex = (currentIndex + direction + currentImages.length) % currentImages.length;
                 updateCarousel();
@@ -526,7 +514,6 @@
             else btt.style.opacity = '0';
         });
         btt.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
-
         window.onclick = (e) => { if (e.target.className == "modal") closeModal(); }
 
         function triggerRandomGlitch() {
