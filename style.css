@@ -18,7 +18,36 @@
     scroll-behavior: smooth; 
 }
 
-/* QoL: Progress Bar */
+/* --- NEW: Target Lock Cursor --- */
+#cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 30px;
+    height: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 10005;
+    transition: width 0.3s, height 0.3s, border-radius 0.3s, border-color 0.3s;
+}
+
+/* --- NEW: Click Shockwave Ripple --- */
+.click-ripple {
+    position: fixed;
+    border: 1px solid #FFF;
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: 10004;
+    animation: rippleAnim 0.6s ease-out forwards;
+}
+@keyframes rippleAnim {
+    0% { width: 0; height: 0; opacity: 0.8; }
+    100% { width: 120px; height: 120px; opacity: 0; }
+}
+
 #progress-container { 
     position: fixed; 
     top: 0; 
@@ -36,7 +65,6 @@
     box-shadow: 0 0 10px #fff; 
 }
 
-/* QoL: Sector Breadcrumb */
 #hud-sector { 
     position: fixed; 
     top: 50%; 
@@ -51,7 +79,6 @@
     opacity: 0.7; 
 }
 
-/* Interactive Perspective Grid Floor */
 .grid-floor { 
     position: fixed; 
     bottom: -100px; 
@@ -68,7 +95,6 @@
     transition: transform 0.1s ease-out; 
 }
 
-/* CRT Aesthetic Overlays */
 .crt-overlay { 
     position: fixed; 
     top: 0; 
@@ -115,7 +141,8 @@ body {
     color: var(--text-primary); 
     font-family: 'Segoe UI', sans-serif; 
     padding: 60px 20px; 
-    overflow-x: hidden; 
+    overflow-x: hidden;
+    cursor: crosshair; /* Replaces default cursor with basic crosshair */
 }
 
 body::before { 
@@ -356,7 +383,6 @@ h2 {
     z-index: 10; 
 }
 
-/* Added Section Subtext Style */
 .section-subtext { 
     font-family: var(--font-mono); 
     font-size: 0.85rem; 
@@ -435,6 +461,31 @@ section {
     100% { left: 150%; } 
 }
 
+/* --- NEW: Category Filters Layout --- */
+.project-filters {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.filter-btn {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.filter-btn:hover, .filter-btn.active {
+    color: var(--text-primary);
+    border-color: #fff;
+    background: rgba(255,255,255,0.1);
+}
+
 .game-grid, .project-grid { 
     display: flex; 
     flex-wrap: wrap; 
@@ -442,6 +493,7 @@ section {
     justify-content: center; 
 }
 
+/* --- ENHANCED: 3D Parallax on Cards --- */
 .game-card, .project-card { 
     flex: 0 0 280px; 
     height: 350px; 
@@ -456,6 +508,8 @@ section {
     overflow: hidden; 
     filter: grayscale(100%); 
     transition: filter 0.5s ease, transform 0.3s ease; 
+    
+    transform-style: preserve-3d; /* Allows interior elements to pop out */
 }
 
 .game-card::after, .project-card::after { 
@@ -467,7 +521,7 @@ section {
     height: 100%; 
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); 
     z-index: 10; 
-    transform: skewX(-20deg); 
+    transform: skewX(-20deg) translateZ(10px); 
     transition: 0s; 
     pointer-events: none; 
     opacity: 0; 
@@ -494,6 +548,7 @@ section {
     -webkit-backdrop-filter: blur(6px); 
     z-index: 1; 
     transition: backdrop-filter 0.5s ease; 
+    transform: translateZ(-1px);
 }
 
 .project-card:hover::before { 
@@ -518,6 +573,8 @@ section {
     flex-direction: column; 
     justify-content: center; 
     border-top: 1px solid var(--border-color); 
+    
+    transform: translateZ(40px); /* 3D Parallax lift */
 }
 
 .game-card h3 { 
@@ -559,6 +616,8 @@ section {
     justify-content: center; 
     align-items: center; 
     border: 1px solid var(--border-color); 
+
+    transform: translateZ(40px); /* 3D Parallax lift */
 }
 
 .figma-btn { 
@@ -580,7 +639,6 @@ section {
     color: white; 
 }
 
-/* FIXED MODAL SYSTEM */
 .modal { 
     display: none; 
     position: fixed; 
@@ -671,7 +729,6 @@ section {
     border: none; 
 }
 
-/* HUD Zoom Buttons - Semi Transparent Frosted Glass */
 .zoom-controls { 
     position: absolute; 
     top: 15px; 
@@ -701,7 +758,6 @@ section {
     border-color: #fff; 
 }
 
-/* Navigation buttons - Semi Transparent Frosted Glass */
 .nav-btn { 
     position: absolute; 
     top: 50%; 
@@ -795,11 +851,12 @@ footer {
 .split-right { right: 0; }
 
 @media (max-width: 700px) {
-    #hud-sector, #progress-container { display: none; }
+    #hud-sector, #progress-container, #cursor-ring { display: none; } /* Cursor hides on mobile */
     .project-card, .game-card { flex: 1 0 100%; height: 280px; }
     .modal-content { width: 100%; padding: 10px; height: 100vh; max-height: none; justify-content: center; }
     .carousel-container { height: 70vh; }
     .nav-btn { padding: 10px 15px; font-size: 1.2rem; }
     .zoom-controls button { padding: 8px 15px; font-size: 1.2rem; }
     #back-to-top { display: none; }
+    .project-filters { flex-wrap: wrap; }
 }
