@@ -18,7 +18,6 @@
     scroll-behavior: smooth; 
 }
 
-/* --- NEW: Target Lock Cursor --- */
 #cursor-ring {
     position: fixed;
     top: 0;
@@ -33,7 +32,6 @@
     transition: width 0.3s, height 0.3s, border-radius 0.3s, border-color 0.3s;
 }
 
-/* --- NEW: Click Shockwave Ripple --- */
 .click-ripple {
     position: fixed;
     border: 1px solid #FFF;
@@ -43,6 +41,7 @@
     z-index: 10004;
     animation: rippleAnim 0.6s ease-out forwards;
 }
+
 @keyframes rippleAnim {
     0% { width: 0; height: 0; opacity: 0.8; }
     100% { width: 120px; height: 120px; opacity: 0; }
@@ -142,7 +141,7 @@ body {
     font-family: 'Segoe UI', sans-serif; 
     padding: 60px 20px; 
     overflow-x: hidden;
-    cursor: crosshair; /* Replaces default cursor with basic crosshair */
+    cursor: crosshair;
 }
 
 body::before { 
@@ -255,14 +254,14 @@ body::before {
     pointer-events: none; 
 }
 
-.glitch-target.is-glitching::before, .glitch-target:hover::before { 
+.glitch-target.is-glitching::before, .glitch-target:hover::before, .glitch-target.is-decrypting::before { 
     left: 2px; 
     text-shadow: -2px 0 #FFFFFF; 
     clip: rect(44px, 450px, 56px, 0); 
     animation: glitch-anim 0.2s infinite linear alternate-reverse; 
 }
 
-.glitch-target.is-glitching::after, .glitch-target:hover::after { 
+.glitch-target.is-glitching::after, .glitch-target:hover::after, .glitch-target.is-decrypting::after { 
     left: -2px; 
     text-shadow: 2px 0 #555555; 
     animation: glitch-anim2 0.2s infinite linear alternate-reverse; 
@@ -461,7 +460,6 @@ section {
     100% { left: 150%; } 
 }
 
-/* --- NEW: Category Filters Layout --- */
 .project-filters {
     display: flex;
     justify-content: center;
@@ -493,7 +491,6 @@ section {
     justify-content: center; 
 }
 
-/* --- ENHANCED: 3D Parallax on Cards --- */
 .game-card, .project-card { 
     flex: 0 0 280px; 
     height: 350px; 
@@ -508,8 +505,7 @@ section {
     overflow: hidden; 
     filter: grayscale(100%); 
     transition: filter 0.5s ease, transform 0.3s ease; 
-    
-    transform-style: preserve-3d; /* Allows interior elements to pop out */
+    transform-style: preserve-3d; 
 }
 
 .game-card::after, .project-card::after { 
@@ -573,8 +569,7 @@ section {
     flex-direction: column; 
     justify-content: center; 
     border-top: 1px solid var(--border-color); 
-    
-    transform: translateZ(40px); /* 3D Parallax lift */
+    transform: translateZ(40px); 
 }
 
 .game-card h3 { 
@@ -616,8 +611,7 @@ section {
     justify-content: center; 
     align-items: center; 
     border: 1px solid var(--border-color); 
-
-    transform: translateZ(40px); /* 3D Parallax lift */
+    transform: translateZ(40px); 
 }
 
 .figma-btn { 
@@ -637,6 +631,25 @@ section {
 .figma-btn:hover { 
     background: var(--figma-color); 
     color: white; 
+}
+
+.repo-btn { 
+    margin-top: 10px; 
+    border: 1px solid #fff; 
+    color: #fff; 
+    padding: 5px 10px; 
+    text-decoration: none; 
+    font-family: var(--font-mono); 
+    font-size: 0.7rem; 
+    transition: 0.2s; 
+    display: inline-block; 
+    position: relative; 
+    z-index: 2; 
+}
+
+.repo-btn:hover { 
+    background: #fff; 
+    color: #000; 
 }
 
 .modal { 
@@ -851,7 +864,7 @@ footer {
 .split-right { right: 0; }
 
 @media (max-width: 700px) {
-    #hud-sector, #progress-container, #cursor-ring { display: none; } /* Cursor hides on mobile */
+    #hud-sector, #progress-container, #cursor-ring { display: none; }
     .project-card, .game-card { flex: 1 0 100%; height: 280px; }
     .modal-content { width: 100%; padding: 10px; height: 100vh; max-height: none; justify-content: center; }
     .carousel-container { height: 70vh; }
